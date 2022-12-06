@@ -1,0 +1,19 @@
+{
+  "name": "butterfly",
+  "version": "1.0.0",
+  "description": "Web API to connect Damocles Apps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kowagatte/butterfly.git"
+  },
+  "author": "Nicholas N Ryan",
+  "license": "CC-BY-NC-ND-4.0",
+  "bugs": {
+    "url": "https://github.com/Kowagatte/butterfly/issues"
+  },
+  "homepage": "https://github.com/Kowagatte/butterfly#readme"
+}
