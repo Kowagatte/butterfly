@@ -81,15 +81,20 @@ app.post('/tds/compare', (req, res)=>{
                         res.status(500)
                         res.send("query error")
                     }else{
-                        bcrypt.compare(req.body['password'], result[0]['password'], (err, comp)=>{
-                            if(comp){
-                                res.status(200)
-                                res.send("Logged in successfully")
-                            }else{
-                                res.status(401)
-                                res.send("Incorrect Password.")
-                            }
-                        })
+                        if(result.length == 0){
+                            res.status(300)
+                            res.send("Email does not exist")
+                        }else{
+                            bcrypt.compare(req.body['password'], result[0]['password'], (err, comp)=>{
+                                if(comp){
+                                    res.status(200)
+                                    res.send("Logged in successfully")
+                                }else{
+                                    res.status(401)
+                                    res.send("Incorrect Password.")
+                                }
+                            })
+                        }
                     }
                 })
             }
