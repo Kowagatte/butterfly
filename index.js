@@ -15,7 +15,7 @@ var mysqlCon = mysql.createConnection({
 })
 
 app.get('/', (req, res)=>{
-    res.send("Hello World!")
+    res.send("TDS API")
 })
 
 app.post('/tds/createAccount/', (req, res)=>{
@@ -202,5 +202,10 @@ app.listen(port, ()=>{
         if(err) console.log("MYSQL did not connect!")
         else console.log("Connected to MYSQL")
     })
+
+    function keep_alive(){
+        mysqlCon.query("SELECT 'KEEP_ALIVE'", (err, result) =>{})
+    }
+    setInterval(keep_alive, 3600000)
     console.log(`App Started on port ${port}`)
 })
