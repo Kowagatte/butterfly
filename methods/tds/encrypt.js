@@ -6,7 +6,7 @@ module.exports = {
         app.post('/tds/encrypt', (req, res)=>{
             const unencryptedPass = req.body['password']
             if(unencryptedPass != null || unencryptedPass != ""){
-                bcrypt.hash(unencryptedPass, saltRounds, (err, hash)=>{
+                bcrypt.hash(unencryptedPass, 10, (err, hash)=>{
                     if(err){
                         res.status(500)
                     }else{

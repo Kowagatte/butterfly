@@ -19,7 +19,7 @@ module.exports = {
                                 res.status(400)
                                 res.send("Username is already taken.")
                             }else{
-                                bcrypt.hash(req.body['password'], saltRounds, (err, hash)=>{
+                                bcrypt.hash(req.body['password'], 10, (err, hash)=>{
                                     if(err){
                                         res.status(500)
                                     }else{
