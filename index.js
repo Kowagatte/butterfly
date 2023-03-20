@@ -26,14 +26,38 @@ app.get('/', (req, res)=>{
 
 // -------------------------------------------------------------------------------------- //
 
-// TDS method construction
+// Loads all method "modules" dynamically at runtime.
 
-const tdsMethodFiles = fs.readdirSync('./methods/tds/').filter(file => file.endsWith('.js'))
-const methods = {}
 
-for (const file of tdsMethodFiles){
-    const method = require(`./methods/tds/${file}`)
-    methods[method.name] = method
+/**
+ * Function: loadMethodFiles
+ * @param {String} path: the path to directory containing Javascript files.
+ * 
+ * Loops through all files in directory and saves all *.js files to dictionary.
+ */
+function loadMethodFiles(path){
+    const methodFiles = fs.readdirSync(path).filter(file => file.endsWith('.js'))
+    const methods = {}
+    
+    for (const file of methodFiles){
+        const method = require(`${path}${file}`)
+        methods[method.name] = method
+    }
+
+    return methods
+}
+
+/**
+ * Function: startMethods
+ * @param {String} name: name of folder nested in "./methods/" containing Javascript files.
+ * 
+ * Loops through each Javascript file in the given directory and
+ *  executes the "#execute" function inside them.
+ */
+function startMethods(name){
+    Object.values(loadMethodFiles(`./methods/${name}/`)).forEach(value => {
+        value.execute(app, mysqlCon, bcrypt, passwords)
+    });
 }
 
 // -------------------------------------------------------------------------------------- //
@@ -41,19 +65,21 @@ for (const file of tdsMethodFiles){
 // App Starting
 
 app.listen(port, ()=>{
+    // Connect to database.
     mysqlCon.connect((err) =>{
         if(err) console.log("MYSQL did not connect!")
         else console.log("Connected to MYSQL")
     })
 
+    // Keeps database connection alive.
     function keep_alive(){
         mysqlCon.query("SELECT 'KEEP_ALIVE'", (err, result) =>{})
     }
     setInterval(keep_alive, 3600000)
 
-    Object.values(methods).forEach(value => {
-        value.execute(app, mysqlCon, bcrypt, passwords)
-    });
+    // Loads all GET & POST methods.
+    startMethods('tds')
+    startMethods('damocles')
 
     console.log(`App Started on port ${port}`)
 })
