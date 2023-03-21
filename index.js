@@ -1,12 +1,14 @@
 // Main file for Butterfly
 
 const fs = require('fs')
+const cors = require('cors')
 const passwords  = require('./passwords.json')
 const express = require('express')
 const mysql = require('mysql2')
 const bcrypt = require("bcrypt")
 
 const app = express()
+app.use(cors())
 app.use(express.json())
 const port = 8080
 
