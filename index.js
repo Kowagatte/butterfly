@@ -5,12 +5,18 @@ const cors = require('cors')
 const passwords  = require('./passwords.json')
 const express = require('express')
 const mysql = require('mysql2')
+const https = require('https')
 const bcrypt = require("bcrypt")
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 const port = 8080
+
+var options = {
+    key: fs.readFileSync('damocles_ca.key'),
+    cert: fs.readFileSync('api_damocles_ca.crt')
+}
 
 var mysqlCon = mysql.createConnection({
     host: "192.168.0.13",
@@ -66,7 +72,7 @@ function startMethods(name){
 
 // App Starting
 
-app.listen(port, ()=>{
+https.createServer(options, app).listen(port, ()=>{
     // Connect to database.
     mysqlCon.connect((err) =>{
         if(err) console.log("MYSQL did not connect!")
