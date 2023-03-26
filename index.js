@@ -6,16 +6,19 @@ const passwords  = require('./passwords.json')
 const express = require('express')
 const mysql = require('mysql2')
 const https = require('https')
+const http = require('http')
 const bcrypt = require("bcrypt")
 
 const app = express()
 app.use(cors())
 app.use(express.json())
-const port = 8080
 
 var options = {
     key: fs.readFileSync('damocles_ca.key'),
-    cert: fs.readFileSync('api_damocles_ca.crt')
+    cert: fs.readFileSync('api_damocles_ca.crt'),
+    ca: [
+        fs.readFileSync('api_damocles_ca.ca-bundle')
+    ]
 }
 
 var mysqlCon = mysql.createConnection({
@@ -72,22 +75,25 @@ function startMethods(name){
 
 // App Starting
 
-https.createServer(options, app).listen(port, ()=>{
-    // Connect to database.
-    mysqlCon.connect((err) =>{
-        if(err) console.log("MYSQL did not connect!")
-        else console.log("Connected to MYSQL")
-    })
+// Connect to database.
+mysqlCon.connect((err) =>{
+    if(err) console.log("MYSQL did not connect!")
+    else console.log("Connected to MYSQL")
+})
 
-    // Keeps database connection alive.
-    function keep_alive(){
-        mysqlCon.query("SELECT 'KEEP_ALIVE'", (err, result) =>{})
-    }
-    setInterval(keep_alive, 3600000)
+// Keeps database connection alive.
+function keep_alive(){
+    mysqlCon.query("SELECT 'KEEP_ALIVE'", (err, result) =>{})
+}
+setInterval(keep_alive, 3600000)
 
-    // Loads all GET & POST methods.
-    startMethods('tds')
-    startMethods('damocles')
+// Loads all GET & POST methods.
+startMethods('tds')
+startMethods('damocles')
 
-    console.log(`App Started on port ${port}`)
+http.createServer(app).listen(80, ()=>{
+    console.log(`HTTP Started on port 80`)
+})
+https.createServer(options, app).listen(443, ()=>{
+    console.log(`HTTPS Started on port 443`)
 })
