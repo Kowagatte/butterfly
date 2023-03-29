@@ -5,3 +5,6 @@ blogs/drafts/
 credentials.json
 token.json
 authcode.json
+api_damocles_ca.ca-bundle
+api_damocles_ca.crt
+damocles_ca.key
