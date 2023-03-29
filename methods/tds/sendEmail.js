@@ -27,7 +27,7 @@ module.exports = {
                 res.send("email sent")
             }).catch(err =>{
                 res.status(500)
-                res.send("Message failed")
+                res.send(err)
             })
 
         })
