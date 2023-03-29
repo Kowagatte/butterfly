@@ -2,9 +2,10 @@ const { google } = require('googleapis');
 const path = require('path');
 const fs = require('fs');
 const credentials = require('./credentials.json');
+const authcode = require('./authcode.json')
 
 // Replace with the code you received from Google
-const code = 'TOKEN HERE';
+const code = authcode['code'];
 const { client_secret, client_id, redirect_uris } = credentials.installed;
 const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 

@@ -4,3 +4,4 @@ reqs.http
 blogs/drafts/
 credentials.json
 token.json
+authcode.json
